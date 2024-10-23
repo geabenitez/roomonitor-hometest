@@ -1,73 +1,74 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="200" alt="Nest Logo" /></a>
-</p>
+# Proyecto API con Autenticación y Gestión de Cuartos
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+Este proyecto incluye autenticación básica y CRUD de cuartos, con integración a base de datos y documentación Swagger para facilitar las pruebas. A continuación, se detallan los pasos para configurar y ejecutar el proyecto.
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://coveralls.io/github/nestjs/nest?branch=master" target="_blank"><img src="https://coveralls.io/repos/github/nestjs/nest/badge.svg?branch=master#9" alt="Coverage" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+## Requisitos Previos
 
-## Description
+- **Docker**
+- **Docker Compose**
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+## Instrucciones para la Configuración
 
-## Installation
+1. **Clonar el archivo `.env`**:
+   Para configurar las variables de entorno, hacer una copia del archivo `sample.env` en la carpeta raíz del proyecto con el siguiente comando:
 
-```bash
-$ pnpm install
-```
+   ```bash
+   cp sample.env .env
+   ```
 
-## Running the app
+2.	**Correr la Aplicación**:
+  Ejecutar el siguiente comando para iniciar el proyecto con Docker Compose. Dependiendo de la versión que tengas instalada, puede ser uno de los siguientes:
 
-```bash
-# development
-$ pnpm run start
+  ```bash
+  docker-compose up 
+  ```
+  o
+  ```bash
+  docker compose up
+  ```
 
-# watch mode
-$ pnpm run start:dev
+Esto descargará y configurará automáticamente todos los servicios necesarios, incluyendo la base de datos.
 
-# production mode
-$ pnpm run start:prod
-```
+## Endpoints Disponibles
 
-## Test
+1. Autenticación: POST /auth/login
 
-```bash
-# unit tests
-$ pnpm run test
+  - Descripción: Endpoint para iniciar sesión.
+  - Acceso: Público. No requiere autenticación para ser utilizado.
 
-# e2e tests
-$ pnpm run test:e2e
+2. Usuarios: POST /users
 
-# test coverage
-$ pnpm run test:cov
-```
+  - Descripción: Endpoint para crear usuarios de prueba.
+  - Acceso: Público en este ejercicio, pero idealmente debería estar protegido por autenticación.
 
-## Support
+3. Cuartos (Rooms)
 
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
+Los siguientes endpoints están relacionados con la gestión de cuartos y requieren autenticación:
 
-## Stay in touch
+- Crear un cuarto: POST /rooms
+- Obtener todos los cuartos: GET /rooms
+- Obtener un cuarto por ID: GET /rooms/:id
+- Actualizar un cuarto por ID: PUT /rooms/:id
 
-- Author - [Kamil Myśliwiec](https://kamilmysliwiec.com)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
+Nota: Todo lo relacionado con cuartos (rooms) debe estar autenticado.
 
-## License
+## Documentación con Swagger
 
-Nest is [MIT licensed](LICENSE).
+Este proyecto tiene habilitada la documentación Swagger, accesible en la URL:
+
+http://localhost:3000/api
+
+Swagger proporciona una interfaz funcional que permite realizar pruebas sin necesidad de utilizar herramientas como Postman.
+
+### Base de Datos
+
+  - La aplicación utiliza una base de datos PostgresQL configurada a través de Docker.
+  - Cada vez que se detiene el contenedor, la base de datos se reinicia y es necesario recrear los datos.
+  - El archivo ormconfig está configurado con synchronize: true, lo que permite que los esquemas se sincronicen automáticamente sin la necesidad de ejecutar migraciones manualmente. Sin embargo, en un entorno de producción, los cambios en el esquema de la base de datos deben manejarse mediante migraciones.
+
+### Aclaraciones
+
+ - Sé que se mencionó la opción de quemar el usuario y la contraseña dentro del código, pero decidí ir un paso más allá. Agregué una pequeña base de datos que se configura automáticamente con Docker para facilitar el acceso a la información.
+ - Dado que la base de datos no tiene un volumen persistente configurado, cada vez que se detiene el contenedor, se debe recrear toda la información.
+ - Para evitar tener que realizar migraciones manuales, el ORM está configurado con synchronize: true. Esto no es recomendable para producción, donde todos los cambios deben gestionarse a través de migraciones.
+ - Aunque no se han incluido test unitarios por falta de tiempo, es una buena práctica incorporarlos para asegurar la calidad del software.
